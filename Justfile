@@ -24,5 +24,10 @@ db-bootstrap:
         -U ${ADMIN_DB_USER} -d ${DB_NAME} \
         -c "CREATE SCHEMA internal AUTHORIZATION ${ADMIN_DB_USER};"
 
+    # app user
+    PGPASSWORD=${ADMIN_DB_PASSWORD} psql -h ${DB_HOST} -p ${DB_PORT} \
+        -U ${ADMIN_DB_USER} -d ${DB_NAME} \
+        -c "CREATE ROLE ${DB_USER} WITH NOINHERIT LOGIN PASSWORD '${DB_PASSWORD}';"
+
 db-migrate:
     sqlx migrate run -D "${DB_URI}&options=-c search_path=internal"
