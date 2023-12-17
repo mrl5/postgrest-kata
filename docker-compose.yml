@@ -27,6 +27,7 @@ services:
       PGRST_DB_URI: ${DB_URI}
       PGRST_DB_SCHEMAS: "api"
       PGRST_DB_ANON_ROLE: "web_anon"
+      PGRST_JWT_SECRET: ${JWT_SECRET}
     depends_on:
       db:
         condition: service_healthy
