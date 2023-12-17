@@ -12,6 +12,9 @@ run:
 db-only:
     ${DOCKER_COMPOSE} up db
 
+api-only:
+    ${DOCKER_COMPOSE} up api
+
 dev-tools:
     cargo install hurl sqlx-cli
 
@@ -20,14 +23,15 @@ lint:
 
 db-bootstrap:
     # internal schema
-    PGPASSWORD=${ADMIN_DB_PASSWORD} psql -h ${DB_HOST} -p ${DB_PORT} \
+    PGPASSWORD=${ADMIN_DB_PASSWORD} psql -h ${LOCAL_DB_HOST} -p ${DB_PORT} \
         -U ${ADMIN_DB_USER} -d ${DB_NAME} \
         -c "CREATE SCHEMA internal AUTHORIZATION ${ADMIN_DB_USER};"
 
     # app user
-    PGPASSWORD=${ADMIN_DB_PASSWORD} psql -h ${DB_HOST} -p ${DB_PORT} \
+    PGPASSWORD=${ADMIN_DB_PASSWORD} psql -h ${LOCAL_DB_HOST} -p ${DB_PORT} \
         -U ${ADMIN_DB_USER} -d ${DB_NAME} \
         -c "CREATE ROLE ${DB_USER} WITH NOINHERIT LOGIN PASSWORD '${DB_PASSWORD}';"
 
 db-migrate:
-    sqlx migrate run -D "${DB_URI}&options=-c search_path=internal"
+    sqlx migrate run -D \
+        "postgres://${ADMIN_DB_USER}:${ADMIN_DB_PASSWORD}@${LOCAL_DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=disable&options=-c search_path=internal"
