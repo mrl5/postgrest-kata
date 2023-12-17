@@ -11,3 +11,4 @@ FROM
 GRANT SELECT ON api.todos TO web_anon;
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON api.todos TO todo_user;
+

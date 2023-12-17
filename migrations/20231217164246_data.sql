@@ -8,3 +8,4 @@ CREATE TABLE data.todos (
 INSERT INTO data.todos (task)
     VALUES ('finish tutorial 0'),
     ('pat self on back');
+
